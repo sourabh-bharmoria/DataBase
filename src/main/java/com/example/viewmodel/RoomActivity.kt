@@ -2,22 +2,26 @@ package com.example.viewmodel
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.room.Room
-import com.example.viewmodel.databinding.ItemViewBinding
 import com.example.viewmodel.databinding.RoomActivityBinding
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+
 
 class RoomActivity: AppCompatActivity() {
     private lateinit var binding: RoomActivityBinding
-    lateinit var database: ContactDatabase
+//    lateinit var database: ContactDatabase
+    private lateinit var viewModel: ContactViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = RoomActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        database = Room.databaseBuilder(applicationContext, ContactDatabase::class.java,"ContactDB").build()
+        viewModel = ViewModelProvider(this)[ContactViewModel::class.java]
+
+//Shifted the database build/creation and other insert,getContacts methods into ContactViewModel class
+
+//        database = Room.databaseBuilder(applicationContext, ContactDatabase::class.java,"ContactDB").build()
 
 //        GlobalScope.launch {
 //            database.dao.insertContact(Contact(9,"Divay","Sharma","290338"))
@@ -28,14 +32,11 @@ class RoomActivity: AppCompatActivity() {
 //
 //
 //        }
-        database.dao.getContacts().observe(this){contacts ->
+//        database.dao.getContacts().observe(this){contacts ->
+          viewModel.contacts.observe(this){contacts ->
             binding.contactList.adapter = RoomAdapter(contacts)
             binding.contactList.layoutManager = LinearLayoutManager(this)
         }
-
-
-
-
 
     }
 }
