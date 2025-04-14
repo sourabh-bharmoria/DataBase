@@ -10,6 +10,7 @@ import com.example.viewmodel.databinding.RoomActivityBinding
 class RoomActivity: AppCompatActivity() {
     private lateinit var binding: RoomActivityBinding
 //    lateinit var database: ContactDatabase
+
     private lateinit var viewModel: ContactViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,6 +18,7 @@ class RoomActivity: AppCompatActivity() {
         binding = RoomActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+//creating the instance of ContactViewModel whose lifecycle is tied to this Activity
         viewModel = ViewModelProvider(this)[ContactViewModel::class.java]
 
 //Shifted the database build/creation and other insert,getContacts methods into ContactViewModel class
@@ -32,6 +34,9 @@ class RoomActivity: AppCompatActivity() {
 //
 //
 //        }
+
+
+//This observes the Livedata<list<Contacts>> and when some change happen it updates the recycleView.
 //        database.dao.getContacts().observe(this){contacts ->
           viewModel.contacts.observe(this){contacts ->
             binding.contactList.adapter = RoomAdapter(contacts)
